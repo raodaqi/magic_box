@@ -3,7 +3,7 @@ var router = require('express').Router();
 var AV = require('leanengine');
 var AS = require('api-send');
 AS.config.APPID = '59156b13a0bb9f005fd3cb3a';
-AS.config.HOST = 'http://magicbox.leanapp.cn';
+AS.config.HOST = 'http://magic-box.leanapp.cn';
 
 function sendError(res,code,message){
 	var result = {
