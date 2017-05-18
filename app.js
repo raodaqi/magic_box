@@ -5,6 +5,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var AV = require('leanengine');
+var AutoBuild = require('./routes/auto_build.js');
+// var autoBuild = new AutoBuild();
+
 var LCT = require('lc-build');
 var LCT = new LCT({
   path:"routes/lore.js",
@@ -28,8 +31,8 @@ var requireAuthentication = function(req, res, next) {
 }
 
 //设置跨域访问
-app.all('/app/*', requireAuthentication);
-app.all('/api/*', requireAuthentication);
+// app.all('/app/*', requireAuthentication);
+// app.all('/api/*', requireAuthentication);
 
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'views'));
@@ -38,7 +41,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 // 设置默认超时时间
-app.use(timeout('15s'));
+app.use(timeout('60s'));
 
 // 加载云引擎中间件
 app.use(AV.express());
@@ -51,14 +54,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// app.get('/', function(req, res) {
-//   res.render('index', { currentTime: new Date() });
-// });
+
+
+app.get('/', function(req, res) {
+  // AutoBuild.doRum();
+  res.render('index', { currentTime: new Date() });
+});
+app.get('/list', function(req, res) {
+  // AutoBuild.doRum();
+  res.render('list', { currentTime: new Date() });
+});
 
 // 可以将一类的路由单独保存在一个文件中
-// app.use('/todos', require('./routes/todos'));
-// app.use('/app', require('./routes/app'));
-// app.use('/api', require('./routes/api'));
+app.use('/format', require('./routes/format'));
 app.use('/lore', require('./routes/lore'));
 
 app.use(function(req, res, next) {

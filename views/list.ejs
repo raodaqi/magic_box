@@ -1,0 +1,145 @@
+<% include header.ejs %>
+<link href='/css/style.css', rel='stylesheet', type='text/css'>
+<link href="/icheck/icheck.css" rel="stylesheet">
+<style type="text/css">
+  .type-li{
+    padding: 10px 10px;
+    background-color: white;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+  }
+  .type-li:first-child{
+    border-top: 1px solid #eee;
+  }
+  .icon-x{
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+    color: red;
+    cursor: pointer;
+  }
+  .btn-content{
+    text-align: center;
+      margin-top: 50px;
+  }
+  .btn-content .btn{
+      width: 150px;
+      margin:0 20px;
+  }
+  .apimanage_add.apiactive a{
+    color: white !important;
+  }
+  .panel{
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 15px;
+  }
+  .panel-body{
+    padding-bottom: 10px;
+    cursor: pointer;
+  }
+  .platform{
+    padding-left: 15px;
+    font-size: 16px;
+    padding-bottom: 10px;
+    color: #ccc;
+  }
+  .layui-layer-content{
+    width: 60px;
+    height: 24px;
+    background: url(/layer/skin/default/loading-0.gif) no-repeat;
+    margin: 30px auto;
+  }
+  .panel-default{
+    position: relative;
+  }
+  .btn-right{
+    position: absolute;
+    right:20px;
+    top: 25px;
+  }
+</style>
+<nav class="navbar navbar-custom navbar-fixed-top top-nav-collapse" role="navigation" id="title">
+  <div class="navbar-header page-scroll">
+    <a href="/">
+      <div class="logo">margic_box</div>
+    </a>
+  </div>
+</nav>
+<body>
+
+<div class="content">
+  <!-- <div id="" class="layui-layer-content layui-layer-loading0"></div></div> -->
+  <div class="panel panel-default" data-id="591d99ad44d904006c9ca3d2"><div class="panel-body" data-href="http://www.jianshu.com/p/29db31b272be">30天挑战－写一部属于你的中篇小说</div><div class="platform">来自简书</div>
+  <button type="button" class="btn btn-danger btn-right" aria-label="Left Align">
+    部署
+  </button>
+  </div>
+</div>
+
+<% include footer.ejs %>
+<script type="text/javascript" src="/icheck/jquery.icheck.min.js"></script>
+<script>
+  //点击创建生成
+  $(".create").on("click",function () {
+      var data = $("#form").serializeArray();
+      var url = "/lore/list";
+      var type = "POST";
+      sendQuery(url,type,data,{
+          success:function(result){
+              //获取当前项目名称
+              var data = result.data;
+              layer.msg('添加成功', {icon: 1});
+          },
+          error:function(error){
+              layer.msg(error.message, {icon: 2});
+          }
+      })
+  })
+
+  $(function(){
+    //获取列表
+    var url = "/lore/list";
+      var type = "GET";
+      sendQuery(url,type,{},{
+          success:function(result){
+              //获取当前项目名称
+              var data = result.data;
+              console.log(data);
+              var content = '';
+              for(var i = 0; i < data.length; i++){
+                content += '<div class="panel panel-default" data-id='+data[i].objectId+' ><div class="panel-body" data-href="'+data[i].url+'">'+data[i].title+'</div><div class="platform">来自'+data[i].platform+'</div><button type="button" class="btn btn-danger btn-right" aria-label="Left Align">部署</button></div>';
+              }
+              $(".content").empty().append(content);
+          },
+          error:function(error){
+              layer.msg(error.message, {icon: 2});
+          }
+      })
+  })
+
+  $(document).on("click",".panel-body",function(){
+    var url = $(this).attr("data-href");
+    window.location.href = url;
+  })
+
+  $(document).on("click",".btn-right",function(){
+    var id = $(this).parent().attr("data-id");
+    var url = "/lore/deploy";
+    var type = "GET";
+    var data = {
+      id : id
+    }
+    sendQuery(url,type,data,{
+          success:function(result){
+              //获取当前项目名称
+              var data = result.data;
+              layer.msg('部署成功', {icon: 1});
+          },
+          error:function(error){
+              layer.msg(error.message, {icon: 2});
+          }
+      })
+  })
+</script>
+</html>
